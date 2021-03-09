@@ -1,0 +1,49 @@
+STOIAN MIRUNA MARIA
+325 CB
+Tema 3 Client Web. Comunicatie cu REST API
+
+In implementarea temei am pornit de la schelet de laborator 10.
+
+In primul rand am pornit conectiunea iar apoi am inceput sa citesc de la tastatura.
+Daca o comanda citita de la tastatura nu corespunde niciuneia dintre cele prezentate
+in enuntul temei se va afisa un mesaj de eroare si se va astepta o noua comanda de la tastatura.
+Daca o comanda citita de la tastatura se regaseste in cele prezente in enuntul temei atunci voi compune mesajul corespunzator (pentru post, get, delete) in functie de fiecare comanda.
+
+exit
+Aceasta comanda realizeaza deconectarea de la server completa. 
+
+register
+Citeste de la tastatura doi parametri : username si password pe care ii trimite in compute_post_message alaturi de HOST, PORT si RUTA DE ACCES . Daca acest cont deja exista serverul va afisa mesajul de eroare specific. In caz contrat acesta va intoarce 200 OK ceea ce inseamna ca inregistrarea a fost realizata cu succes.
+
+login
+Citeste de la tastatura doi parametri : username si password. Daca username-ul a mai fost introdu si logarea acestuia s-a realizat cu succes atunci se va afisa un mesaj prin care serverul ne anunta ca acest utilizator este deja logat. 
+In continuare se aloca token-ul si cookiu-ul. Se perneste o noua conexiune in caz ca cea deschisa initial s-a terminat si se trimite mesajul catre compute_post_messaje unde se va forma mesajul specific. Daca aceasta operatiune se realizeaza cu succes se va afisa 200 OK.
+
+enter_library
+Se verifica daca cooki-ul este NULL. Cooki-ul este NULL in cazul in utilizatorul nu s-a logat inca sau s-a delogat.
+In cazul in care acesta nu este NULL se va apela functia compute_get_request cu parametrii de HOST, PORT, RUTA si cookie.Daca operatia s-a realizat cu succes serveraul va intoarce 200 OK.
+
+add_book
+Se incearca parsarea token-ului cu JSON.Se verifica daca token-ul este NULL. Daca acesta este null atunci inseamna ca utilizatorul nu este logat si va aparea mesajul de eroare.
+Daca acesta nu este null se va citi de la tastatura titlul ,autorul,genul, numarul de pagini si editura. Daca numarul de pagini este negativ sau este o litera se va afisa mesajul de eroare si utilizatorul este rugat sa o ia de la capat cu adaugarea cartii.
+Se reporneste conexiunea(pentru cazul in care aceasta a expirat) si se apeleaza functia compute_post_request.Daca aceasta operatiune se realizeaza cu succes se va afisa 200 OK.
+
+get_books
+Aceasta functie verifica in primul rand ca utilizatorul sa fie logat. Daca acesta nu este se va afisa mesajul de eroare. In caz contrar se va realiza parsarea JSON pentru token . Se deschide conexiunea si se apeleaza functia compute_get_messaje. Daca aceasta operatie se realizeaza cu succez, pe langa mesajul 200 OK se vor afisa id-ul si titlul cartilor din biblioteca.
+
+
+get_book
+Se incearca parsarea token-ului cu JSON. Daca acesta este null atunci serverul va afisa mesaj de eroare. In caz contrat va citi de la tastatura id-ul cartii despre care dorim sa aflam informatii. Aceasta este concatenat la ruta de acces , se deschide conexiunea si se apeleaza functia compute_get_regquest. Daca id-ul exista mesajul returnat din functie este trimis la server . Daca toate operatiile s-au realizat cu succes atunci se va afisa 200 OK informatiile despre acea carte.
+
+delete_book
+Se incearca parsarea token-ului cu JSON. Daca acesta este null atunci clientul nu este logat si se va afisa un mesaj de eroare. 
+In caz contrar se va citi id-ul de la tastatura si se va concatena la ruta de acces. Se redeschide conexiunea si se apeleaza functia compute_delete_message. Daca operatiile de send_to_server si recive_from_server s-au realizat cu succes atunci se va afisa mesajul 200 OK.
+
+logout
+Setez token-ul pe NULL. Redeschid conexiunea. Apelez functia compute_get_request. pentru aceasta functie este important sa avem cooki-ul valid. Daca toate operatiile se realizeaza cu succes atunci se va afisa mesajul 200 OK.
+
+La finalul fiecarei "functii" voi dezaloca toate alocarile realizate .
+
+Pentru extragerea cooki-ului am m-am folosit de functia get_cookies in care am cautat cu ajutorul functiei strstr incepului stringului de unde il voi pute lua.
+
+Pentru extragerea token-ului m-am folosit de functia parsare_json_token unde l-am extras cu ajutorul functiilor din biblioteca parson.h.
